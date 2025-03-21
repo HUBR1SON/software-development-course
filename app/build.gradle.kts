@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace = "ru.bmstu.ndklab1"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "ru.bmstu.ndklab1"
@@ -54,7 +54,9 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.constraintlayout)
+    implementation(libs.activity)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation("commons-codec:commons-codec:1.15")
 }
