@@ -18,6 +18,16 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.commons.io.IOUtils;
+
+
+
 import ru.bmstu.ndklab1.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity implements TransactionEvents  {
@@ -124,8 +134,7 @@ public class MainActivity extends AppCompatActivity implements TransactionEvents
     public void onButtonClick(View v)
     {
 
-        byte[] trd = stringToHex("9F0206000000000100");
-        transaction(trd);
+        testHttpClient();
 
     }
 
@@ -151,5 +160,38 @@ public class MainActivity extends AppCompatActivity implements TransactionEvents
 
 
 
+
+    protected void testHttpClient()
+    {
+        new Thread(() -> {
+            try {
+                HttpURLConnection uc = (HttpURLConnection)
+                        (new URL("http://10.0.2.2:8080/api/v1/title").openConnection());
+                InputStream inputStream = uc.getInputStream();
+                String html = IOUtils.toString(inputStream);
+                String title = getPageTitle(html);
+                runOnUiThread(() ->
+                {
+                    Toast.makeText(this, title, Toast.LENGTH_LONG).show();
+                });
+
+            } catch (Exception ex) {
+                Log.e("fapptag", "Http client fails", ex);
+            }
+        }).start();
+    }
+
+
+    protected String getPageTitle(String html)
+    {
+        Pattern pattern = Pattern.compile("<title>(.+?)</title>", Pattern.DOTALL);
+        Matcher matcher = pattern.matcher(html);
+        String p;
+        if (matcher.find())
+            p = matcher.group(1);
+        else
+            p = "Not found";
+        return p;
+    }
 
 }
