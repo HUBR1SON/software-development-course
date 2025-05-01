@@ -15,11 +15,14 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/auth")
 public class LoginController {
     @Autowired
     private UserRepository userRepository;
+
 
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody Map<String, String> credentials) {
