@@ -60,7 +60,7 @@ public class AuthenticationProvider extends AbstractUserDetailsAuthenticationPro
             userRepository.save(u);
         }
 
-        UserDetails user= new User(u.login, u.password,
+        UserDetails user = new User(u.login, u.password,
                 true,
                 true,
                 true,

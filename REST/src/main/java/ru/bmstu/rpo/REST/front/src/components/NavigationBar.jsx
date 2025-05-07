@@ -4,6 +4,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHome, faUser } from '@fortawesome/free-solid-svg-icons'
 import { useNavigate } from 'react-router-dom';
 import {Link} from 'react-router-dom';
+import {useDispatch} from "react-redux";
+import {userActions} from "../utils/Rdx";
+import {connect} from "react-redux"
 
 import Utils from '../utils/Utils';
 import BackendService from '../services/BackendService'
@@ -20,6 +23,7 @@ class NavigationBarClass extends React.Component {
     logout() {
         BackendService.logout().then(() => {
             Utils.removeUser();
+            this.props.dispatch(userActions.logout())
             this.goHome()
         });
     }
@@ -62,8 +66,13 @@ render() {
 
 const NavigationBar = props => {
     const navigate = useNavigate()
-
-    return <NavigationBarClass navigate={navigate} {...props} />
+    const dispatch = useDispatch();
+    return <NavigationBarClass navigate={navigate} dispatch={dispatch} {...props} />
 }
 
-export default  NavigationBar;
+const mapStateToProps = state => {
+    const { user } = state.authentication;
+    return { user };
+}
+
+export default connect(mapStateToProps)(NavigationBar);
