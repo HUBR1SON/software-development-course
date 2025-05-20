@@ -12,6 +12,9 @@ import ru.bmstu.rpo.REST.repositories.CountryRepository;
 import jakarta.validation.Valid;
 import ru.bmstu.rpo.REST.tools.DataValidationException;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.util.*;
 
@@ -23,8 +26,8 @@ public class CountryController {
     CountryRepository countryRepository;
 
     @GetMapping("/countries")
-    public List getAllCountries() {
-        return countryRepository.findAll();
+    public Page<Country> getAllCountries(@RequestParam("page") int page, @RequestParam("limit") int limit) {
+        return countryRepository.findAll(PageRequest.of(page, limit, Sort.by(Sort.Direction.ASC, "id")));
     }
 
     @GetMapping("/countries/{id}")
@@ -42,7 +45,6 @@ public class CountryController {
             return new ResponseEntity<Object>(nc, HttpStatus.OK);
         }
         catch(Exception ex) {
-            String error;
             if (ex.getMessage().contains("countries.name_UNIQUE"))
                 throw new DataValidationException("Эта страна уже есть в базе");
             else
@@ -70,18 +72,6 @@ public class CountryController {
         }
     }
 
-    @DeleteMapping("/countries/{id}")
-    public ResponseEntity<Object> deleteCountry(@PathVariable(value = "id") Long countryId) {
-        Optional<Country> country = countryRepository.findById(countryId);
-        Map<String, Boolean> resp = new HashMap<>();
-        if (country.isPresent()) {
-            countryRepository.delete(country.get());
-            resp.put("deleted", Boolean.TRUE);
-        }
-        else
-            resp.put("deleted", Boolean.FALSE);
-        return ResponseEntity.ok(resp);
-    }
 
     @PostMapping("/deletecountries")
     public ResponseEntity<Object> deleteCountries(@RequestBody List<Country> countries) {

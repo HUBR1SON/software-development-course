@@ -47,6 +47,9 @@ public class User {
     @Column(name = "activity")
     public LocalDateTime activity;
 
+    @Transient
+    public String np;
+
     @ManyToMany
     @JoinTable(name = "usersmuseums", joinColumns = @JoinColumn(name = "userid"),
             inverseJoinColumns = @JoinColumn(name = "museumid"))

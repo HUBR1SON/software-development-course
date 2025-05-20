@@ -2,15 +2,10 @@ package ru.bmstu.rpo.REST.models;
 
 import jakarta.persistence.*;
 
+
 @Entity
 @Table(name = "paintings")
 public class Painting {
-
-    public Painting() { }
-
-    public Painting(int id) {
-        this.id = id;
-    }
 
     @Id
     @Column(name = "id", nullable = false)
@@ -19,12 +14,20 @@ public class Painting {
     @Column(name = "name", nullable = false, length = 45)
     public String name;
 
-    @Column(name = "artistid")
-    public Integer artistId;
+    @ManyToOne
+    @JoinColumn(name = "artistid")  // Было @Column - это ошибка!
+    public Artist artist;
 
-    @Column(name = "museumid")
-    public Integer museumId;
+    @ManyToOne
+    @JoinColumn(name = "museumid")  // Было @Column - это ошибка!
+    public Museum museum;
 
     @Column(name = "year")
     public Integer year;
+
+    // Конструкторы
+    public Painting() {}
+    public Painting(int id) {
+        this.id = id;
+    }
 }
